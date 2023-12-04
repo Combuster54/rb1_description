@@ -89,11 +89,11 @@ def generate_launch_description():
         output='screen'
     )
 
-    # load_elevator_controller = ExecuteProcess(
-    #     cmd=['ros2', 'control', 'load_controller', '--set-state', 'start',
-    #          'elevator_effort_controller'],
-    #     output='screen'
-    # )
+    load_elevator_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'start',
+             'elevator_effort_controller'],
+        output='screen'
+    )
 
     return LaunchDescription([
         gazebo,
@@ -116,11 +116,10 @@ def generate_launch_description():
                 target_action=load_joint_state_controller,
                 on_exit=[load_diff_drive_controller],
             )
+        ),RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=load_diff_drive_controller,
+                on_exit=[load_elevator_controller],
+            )
         )
-        # ,RegisterEventHandler(
-        #     event_handler=OnProcessExit(
-        #         target_action=load_diff_drive_controller,
-        #         on_exit=[load_elevator_controller],
-        #     )
-        # )
     ])
